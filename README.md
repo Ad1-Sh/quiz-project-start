@@ -2,24 +2,13 @@
 Created with CodeSandbox
 
 import React, { useState } from 'react';
-import { Slider, Typography, Box, Tooltip } from '@mui/material';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-
-const ValueLabelComponent = (props) => {
-  const { children, value } = props;
-
-  return (
-    <Tooltip enterTouchDelay={0} placement="top" title={value}>
-      {children}
-    </Tooltip>
-  );
-};
+import './StepSlider.css';
 
 const StepSlider = () => {
   const [value, setValue] = useState(14000);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleChange = (event) => {
+    setValue(Number(event.target.value));
   };
 
   const marks = [
@@ -34,33 +23,88 @@ const StepSlider = () => {
   ];
 
   return (
-    <Box sx={{ width: 300, margin: '0 auto', mt: 5 }}>
-      <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="body1">Select Value:</Typography>
-        <Tooltip title="Information about this slider" placement="top">
-          <InfoOutlinedIcon fontSize="small" />
-        </Tooltip>
-      </Box>
-      <Slider
+    <div className="slider-container">
+      <div className="slider-header">
+        <span>Select Value: </span>
+        <span className="info-icon" title="Information about this slider">ℹ️</span>
+      </div>
+      <input
+        type="range"
+        min="14000"
+        max="18000"
+        step="4000"
         value={value}
         onChange={handleChange}
-        aria-labelledby="discrete-slider"
-        step={null}
-        marks={marks}
-        min={14000}
-        max={18000}
-        valueLabelDisplay="auto"
-        ValueLabelComponent={ValueLabelComponent}
+        className="slider"
       />
-      <Box display="flex" justifyContent="space-between">
-        <Typography variant="body2">₹14,000</Typography>
-        <Typography variant="body2">₹18,000</Typography>
-      </Box>
-      <Box mt={2} textAlign="center">
-        <Typography variant="h5">₹{value.toLocaleString()}</Typography>
-      </Box>
-    </Box>
+      <div className="slider-marks">
+        {marks.map((mark) => (
+          <span key={mark.value} className="slider-mark" style={{ left: `${((mark.value - 14000) / 4000) * 50}%` }}>
+            {mark.label}
+          </span>
+        ))}
+      </div>
+      <div className="slider-values">
+        <span>₹14,000</span>
+        <span>₹18,000</span>
+      </div>
+      <div className="slider-value-display">
+        ₹{value.toLocaleString()}
+      </div>
+    </div>
   );
 };
 
 export default StepSlider;
+
+
+
+.slider-container {
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.info-icon {
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.slider {
+  width: 100%;
+  margin: 20px 0;
+}
+
+.slider-marks {
+  position: relative;
+  height: 20px;
+}
+
+.slider-mark {
+  position: absolute;
+  top: -20px;
+  transform: translateX(-50%);
+}
+
+.slider-values {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -10px;
+}
+
+.slider-value-display {
+  margin-top: 20px;
+  font-size: 1.5em;
+  font-weight: bold;
+}
